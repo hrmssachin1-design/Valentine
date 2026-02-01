@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nikki, time to picky</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ffd6e8, #ffeef6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 22px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.3);
+      width: 400px;
+      z-index: 10;
+    }
+
+    h1 {
+      color: #ff5c8d;
+      font-size: 26px;
+      margin-bottom: 35px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-top: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px 0;
+      border-radius: 30px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #yes {
+      background: #ff5c8d;
+      color: white;
+    }
+
+    #yes:hover {
+      background: #ff3d78;
+    }
+
+    #no {
+      background: #ffd1e1;
+      color: #ff5c8d;
+    }
+
+    .message {
+      margin-top: 30px;
+      font-size: 26px;
+      font-weight: 600;
+      color: #ff5c8d;
+      display: none;
+    }
+
+    /* Floating NO */
+    .floating-no {
+      position: fixed;
+      z-index: 9999;
+      transition:
+        left 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        top 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Hearts */
+    .heart {
+      position: fixed;
+      bottom: -30px;
+      pointer-events: none;
+      animation: floatUp linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-120vh) scale(2);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Will you be my Valentine? 💖</h1>
+
+    <div class="buttons">
+      <button id="yes">Yes</button>
+      <button id="no">No</button>
+    </div>
+
+    <div class="message" id="message">cuttu &lt;3</div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
+    const message = document.getElementById("message");
+
+    // Make NO float
+    const rect = noBtn.getBoundingClientRect();
+    noBtn.classList.add("floating-no");
+    noBtn.style.width = rect.width + "px";
+    noBtn.style.height = rect.height + "px";
+    noBtn.style.left = rect.left + "px";
+    noBtn.style.top = rect.top + "px";
+
+    document.addEventListener("mousemove", (e) => {
+      const r = noBtn.getBoundingClientRect();
+      const distance = Math.hypot(
+        e.clientX - (r.left + r.width / 2),
+        e.clientY - (r.top + r.height / 2)
+      );
+
+      if (distance < 140) {
+        const padding = 20;
+        const maxX = window.innerWidth - r.width - padding;
+        const maxY = window.innerHeight - r.height - padding;
+
+        const targetX = Math.random() * maxX;
+        const targetY = Math.random() * maxY;
+
+        noBtn.style.left = targetX + "px";
+        noBtn.style.top = targetY + "px";
+      }
+    });
+
+    // Infinite fast hearts
+    let heartRain = false;
+
+    yesBtn.addEventListener("click", () => {
+      message.style.display = "block";
+      if (!heartRain) {
+        heartRain = true;
+        setInterval(createHeart, 100);
+      }
+    });
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "💗";
+
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = 18 + Math.random() * 28 + "px";
+      heart.style.animationDuration = 2 + Math.random() * 1.2 + "s";
+
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3500);
+    }
+  </script>
+</body>
+</html>
